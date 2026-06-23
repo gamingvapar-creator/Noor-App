@@ -8,7 +8,6 @@ workflows:
     instance_type: mac_mini_m1 # Standard fast builder. Feel free to use 'linux_core' for linux
     
     environment:
-      node: latest
       groups:
         # Define your environment variables in Codemagic UI under Application Settings > Environment Variables
         # and import the group name here (e.g., "production-env")
@@ -35,6 +34,10 @@ workflows:
         - node_modules
 
     scripts:
+      - name: Set Node.js version
+        script: |
+          nvm use 20 || nvm install 20 && nvm use 20
+
       - name: Install dependencies
         script: |
           npm ci --legacy-peer-deps
@@ -51,16 +54,16 @@ workflows:
       # Saves the full client application and compiled server bundle for deployment
       - dist/**/*
 
-  # OPTIONAL: If bundling for Android using Ionic/Capacitor in the future
+  # OPTIONAL: Build configuration for Android using Capacitor
   android-capacitor-build:
     name: Build Capacitor Android App
     max_build_duration: 30
     instance_type: mac_mini_m1
     environment:
-      node: latest
-      android_ndk: 25.2.9519653
       groups:
         - production-env
+      vars:
+        NODE_ENV: "production"
     triggering:
       events:
         - push
@@ -73,19 +76,22 @@ workflows:
         - node_modules
         - ~/.gradle/caches
     scripts:
+      - name: Set Node.js version
+        script: |
+          nvm use 20 || nvm install 20 && nvm use 20
       - name: Install JS/TS dependencies
         script: |
           npm ci --legacy-peer-deps
       - name: Build Web app
         script: |
           npm run build
-      # Standard Capacitor sync commands (uncomment below if capacitor is added)
+      # Standard Capacitor sync and build actions (uncomment if you add ionic/capacitor to the app)
       # - name: Sync Cap configuration
       #   script: |
-          # npx cap sync
+      #     npx cap sync
       # - name: Build Android natively
       #   script: |
-          # cd android && ./gradlew assembleDebug
+      #     cd android && ./gradlew assembleDebug
     artifacts:
       # Saves the compiled APK
       - android/app/build/outputs/apk/debug/app-debug.apk
