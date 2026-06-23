@@ -1,0 +1,91 @@
+# Codemagic CI/CD Configuration File
+# For more information on configuring build pipelines, see: https://docs.codemagic.io/
+
+workflows:
+  web-app-build:
+    name: Build & Test React Web Application
+    max_build_duration: 15
+    instance_type: mac_mini_m1 # Standard fast builder. Feel free to use 'linux_core' for linux
+    
+    environment:
+      node: latest
+      groups:
+        # Define your environment variables in Codemagic UI under Application Settings > Environment Variables
+        # and import the group name here (e.g., "production-env")
+        - production-env
+      vars:
+        # Default placeholder env variables if not set in group
+        NODE_ENV: "production"
+        
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+          source: true
+        - pattern: 'master'
+          include: true
+          source: true
+
+    cache:
+      cache_paths:
+        - ~/.npm
+        - node_modules
+
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm ci --legacy-peer-deps
+
+      - name: Run ESLint & Type Checker (Validation)
+        script: |
+          npm run lint
+
+      - name: Build Web Application & Node Server
+        script: |
+          npm run build
+
+    artifacts:
+      # Saves the full client application and compiled server bundle for deployment
+      - dist/**/*
+
+  # OPTIONAL: If bundling for Android using Ionic/Capacitor in the future
+  android-capacitor-build:
+    name: Build Capacitor Android App
+    max_build_duration: 30
+    instance_type: mac_mini_m1
+    environment:
+      node: latest
+      android_ndk: 25.2.9519653
+      groups:
+        - production-env
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'release/*'
+          include: true
+    cache:
+      cache_paths:
+        - ~/.npm
+        - node_modules
+        - ~/.gradle/caches
+    scripts:
+      - name: Install JS/TS dependencies
+        script: |
+          npm ci --legacy-peer-deps
+      - name: Build Web app
+        script: |
+          npm run build
+      # Standard Capacitor sync commands (uncomment below if capacitor is added)
+      # - name: Sync Cap configuration
+      #   script: |
+          # npx cap sync
+      # - name: Build Android natively
+      #   script: |
+          # cd android && ./gradlew assembleDebug
+    artifacts:
+      # Saves the compiled APK
+      - android/app/build/outputs/apk/debug/app-debug.apk
