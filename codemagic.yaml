@@ -37,7 +37,7 @@ workflows:
     scripts:
       - name: Install dependencies
         script: |
-          npm ci --legacy-peer-deps
+          npm ci --legacy-peer-deps --include=dev
 
       - name: Run ESLint & Type Checker (Validation)
         script: |
@@ -76,7 +76,7 @@ workflows:
     scripts:
       - name: Install JS/TS dependencies
         script: |
-          npm ci --legacy-peer-deps
+          npm ci --legacy-peer-deps --include=dev
       - name: Build Web app
         script: |
           npm run build

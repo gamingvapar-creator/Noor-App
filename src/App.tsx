@@ -430,9 +430,6 @@ export default function App() {
           <WelcomeFlow onLoginComplete={handleLoginSuccess} onSkipLogin={handleSkipLogin} />
         ) : (
           <>
-            {/* Solid Safe Area Status bar top block - keeps background solid white (or dark) as elements scroll up */}
-            <div className="sticky top-0 left-0 right-0 h-6 bg-white dark:bg-[#0A0D10] z-[60] flex-shrink-0 transition-colors duration-505" />
-            
             <div className="absolute top-0 left-0 right-0 h-[400px] bg-green-500/5 blur-[120px] pointer-events-none transition-opacity duration-500"></div>
             <div className="absolute top-1/4 right-0 w-[300px] h-[300px] bg-blue-500/5 blur-[120px] pointer-events-none rounded-full transition-opacity duration-500"></div>
             
