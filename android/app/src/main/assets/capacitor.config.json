@@ -1,0 +1,14 @@
+{
+	"appId": "com.noor.ai",
+	"appName": "Noor AI",
+	"webDir": "dist",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 3000,
+			"backgroundColor": "#ffffff"
+		}
+	},
+	"android": {
+		"backgroundColor": "#ffffff"
+	}
+}

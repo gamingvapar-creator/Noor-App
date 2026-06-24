@@ -6,6 +6,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Sparkles, Coins } from 'lucide-react';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { Header } from './components/Header';
 import { SearchBar } from './components/SearchBar';
 import { TabRow } from './components/TabRow';
@@ -309,7 +311,27 @@ export default function App() {
     }
     // Change to #ffffff for light mode
     themeColorMeta.setAttribute('content', '#ffffff');
+
+    // Update Capacitor status bar
+    const updateStatusBar = async () => {
+      try {
+        await StatusBar.setStyle({ style: Style.Light });
+        await StatusBar.setBackgroundColor({ color: '#ffffff' });
+      } catch (e) {
+        // Ignored, probably not running in capacitor
+      }
+    };
+    updateStatusBar();
   }, [isDarkMode]);
+
+  useEffect(() => {
+    const hideSplash = async () => {
+      try {
+        await SplashScreen.hide();
+      } catch (e) {}
+    };
+    hideSplash();
+  }, []);
 
   // Synchronize dynamic user settings back to localStorage
   useEffect(() => {
