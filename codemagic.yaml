@@ -36,6 +36,8 @@ workflows:
     scripts:
       - name: Set Node.js version
         script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm use 20 || nvm install 20 && nvm use 20
 
       - name: Install dependencies
@@ -78,6 +80,8 @@ workflows:
     scripts:
       - name: Set Node.js version
         script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm use 20 || nvm install 20 && nvm use 20
       - name: Install JS/TS dependencies
         script: |
