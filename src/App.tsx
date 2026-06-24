@@ -299,6 +299,16 @@ export default function App() {
     // ALWAYS force light theme
     document.documentElement.setAttribute('data-theme', 'light');
     document.documentElement.classList.remove('dark');
+    
+    // Update theme-color meta tag for mobile notification and navigation bar
+    let themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    if (!themeColorMeta) {
+      themeColorMeta = document.createElement('meta');
+      themeColorMeta.setAttribute('name', 'theme-color');
+      document.head.appendChild(themeColorMeta);
+    }
+    // Change to #ffffff for light mode
+    themeColorMeta.setAttribute('content', '#ffffff');
   }, [isDarkMode]);
 
   // Synchronize dynamic user settings back to localStorage
@@ -430,10 +440,7 @@ export default function App() {
           <WelcomeFlow onLoginComplete={handleLoginSuccess} onSkipLogin={handleSkipLogin} />
         ) : (
           <>
-            <div className="absolute top-0 left-0 right-0 h-[400px] bg-green-500/5 blur-[120px] pointer-events-none transition-opacity duration-500"></div>
-            <div className="absolute top-1/4 right-0 w-[300px] h-[300px] bg-blue-500/5 blur-[120px] pointer-events-none rounded-full transition-opacity duration-500"></div>
-            
-            <div className="relative z-10 w-full flex-1 flex flex-col overflow-hidden">
+            <div className="relative z-10 w-full flex-1 flex flex-col overflow-hidden pt-safe pb-safe">
               <AnimatePresence mode="wait">
                 {activeTab !== 'Noor AI' ? (
                   <motion.div
