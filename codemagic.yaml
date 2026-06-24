@@ -8,6 +8,7 @@ workflows:
     instance_type: mac_mini_m1 # Standard fast builder. Feel free to use 'linux_core' for linux
     
     environment:
+      node: 20
       groups:
         # Define your environment variables in Codemagic UI under Application Settings > Environment Variables
         # and import the group name here (e.g., "production-env")
@@ -34,12 +35,6 @@ workflows:
         - node_modules
 
     scripts:
-      - name: Set Node.js version
-        script: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use 20 || nvm install 20 && nvm use 20
-
       - name: Install dependencies
         script: |
           npm ci --legacy-peer-deps
@@ -62,6 +57,7 @@ workflows:
     max_build_duration: 30
     instance_type: mac_mini_m1
     environment:
+      node: 20
       groups:
         - production-env
       vars:
@@ -78,11 +74,6 @@ workflows:
         - node_modules
         - ~/.gradle/caches
     scripts:
-      - name: Set Node.js version
-        script: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use 20 || nvm install 20 && nvm use 20
       - name: Install JS/TS dependencies
         script: |
           npm ci --legacy-peer-deps
